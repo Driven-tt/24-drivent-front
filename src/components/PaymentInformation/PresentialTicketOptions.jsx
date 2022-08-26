@@ -23,13 +23,14 @@ export default function PresentialTicketOptions() {
 const Options = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  row-gap: 5px;
   font-family: 'Roboto', sans-serif;
   margin: 10px 0;
 
   & > div {
-    margin-top: 20px;
     display: flex;
-    column-gap: 20px;
+    column-gap: 25px;
   }
 `;
 
