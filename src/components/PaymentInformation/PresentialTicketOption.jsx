@@ -5,11 +5,11 @@ import { PaymentContext } from '../../contexts/PaymentContext';
 export default function PresentialTicketOption({ id, title, price }) {
   const { accommodationModality, selectAccommodationModality } = useContext(PaymentContext);
 
-  const selected = accommodationModality === id; 
+  const selected = accommodationModality.type === id; 
   const bgColor = selected ? '#FFEED2' : '#0000';
 
   return (
-    <AccomodationModality bgColor={bgColor} onClick={() => selectAccommodationModality(id)}>
+    <AccomodationModality bgColor={bgColor} onClick={() => selectAccommodationModality({ type: id, price: price })}>
       <span>{title}</span>
       <span>+ R$ {price}</span>
     </AccomodationModality>

@@ -5,11 +5,11 @@ import { PaymentContext } from '../../contexts/PaymentContext';
 export default function TicketOption({ id, title, price }) {
   const { ticketModality, selectModality } = useContext(PaymentContext);
 
-  const selected = ticketModality === id; 
+  const selected = ticketModality.type === id; 
   const bgColor = selected ? '#FFEED2' : '#0000';
 
   return (
-    <Modality bgColor={bgColor} onClick={() => selectModality(id)}>
+    <Modality bgColor={bgColor} onClick={() => selectModality({ type: id, price: price })}>
       <span>{title}</span>
       <span>R$ {price}</span>
     </Modality>

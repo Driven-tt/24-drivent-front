@@ -7,7 +7,7 @@ import { PaymentContext } from '../../contexts/PaymentContext';
 export default function PresentialTicketOptions() {
   const { ticketModality } = useContext(PaymentContext);
 
-  if(ticketModality !== 'presential') return null;
+  if(ticketModality.type !== 'presential') return null;
 
   return (
     <Options>
