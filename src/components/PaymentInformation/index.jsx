@@ -4,6 +4,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import TicketOptions from './TicketOptions';
 import PresentialTicketOptions from './PresentialTicketOptions';
+import ReserveTicketButton from './ReserveTicketButton';
 
 export default function PaymentInformation() {
   return (
@@ -12,6 +13,7 @@ export default function PaymentInformation() {
       <MuiPickersUtilsProvider utils={DateFnsUtils}></MuiPickersUtilsProvider>
       <TicketOptions />
       <PresentialTicketOptions />
+      <ReserveTicketButton />
     </>
   );
 }

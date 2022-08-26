@@ -1,9 +1,11 @@
-import { createContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
+import UserContext from './UserContext';
 
 export const PaymentContext = createContext();
 
 export function PaymentProvider({ children }) {
+  const { userData } = useContext(UserContext);
   const [ticketModality, setTicketModality] = useState({ type: null, price: null });
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
   const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
@@ -19,6 +21,19 @@ export function PaymentProvider({ children }) {
     setAccommodationModality(modality);
   }
 
+  function reserveTicket() {
+    //TODO chamar api e salvar os dados da reserva
+    const newReserve = {
+      userId: userData.user.id,
+      modality: ticketModality.type,
+      modalityPrice: ticketModality.price,
+      withAccommodation: accommodationModality.type !== null,
+      accommodationModality: accommodationModality.price || 0
+    };
+
+    alert('INGRESSO RESERVADO !');
+  }
+
   return (
     <PaymentContext.Provider 
       value={{ 
@@ -27,7 +42,8 @@ export function PaymentProvider({ children }) {
         ticketModality, 
         accommodationModality, 
         selectModality, 
-        selectAccommodationModality 
+        selectAccommodationModality,
+        reserveTicket
       }}>
       {children}
     </PaymentContext.Provider>
