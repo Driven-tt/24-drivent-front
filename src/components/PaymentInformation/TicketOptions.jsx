@@ -29,7 +29,7 @@ const Options = styled.div`
 
 const Subtitle = styled(Typography)`
   color: #8e8e8e;
-  font-size: 20px;
+  font-size: 20px !important;
   font-family: 'Roboto', sans-serif;
 
 `;
