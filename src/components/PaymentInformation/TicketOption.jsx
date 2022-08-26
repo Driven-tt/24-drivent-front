@@ -1,8 +1,15 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
+import { PaymentContext } from '../../contexts/PaymentContext';
 
-export default function TicketOption({ title, price, bgColor }) {
+export default function TicketOption({ id, title, price }) {
+  const { ticketModality, selectModality } = useContext(PaymentContext);
+
+  const selected = ticketModality === id; 
+  const bgColor = selected ? '#FFEED2' : '#0000';
+
   return (
-    <Modality bgColor={bgColor || '#0000'}>
+    <Modality bgColor={bgColor} onClick={() => selectModality(id)}>
       <span>{title}</span>
       <span>R$ {price}</span>
     </Modality>
@@ -21,6 +28,10 @@ const Modality = styled.div`
     justify-content: center;
     align-items: center;
     row-gap: 10px;
+
+    &:hover {
+        cursor: pointer;
+    }
 
     & > span:first-child {
         font-size: 16px;
