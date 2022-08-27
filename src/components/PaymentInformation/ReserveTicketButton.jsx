@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { PaymentContext } from '../../contexts/PaymentContext';
 
 export default function ReserveTicketButton() {
-  const { ticketModality, accommodationModality, reserveTicket } = useContext(PaymentContext);
+  const { ticketModality, accommodationModality, reserveTicket, loading } = useContext(PaymentContext);
 
   if(ticketModality.type !== 'online' && accommodationModality.type === null) return null;
 
@@ -12,7 +12,7 @@ export default function ReserveTicketButton() {
   return (
     <Wrapper>
       <Subtitle variant="h5">Fechado! O total ficou em <strong>R$ {total}</strong>. Agora é só confirmar:</Subtitle>
-      <Button onClick={() => reserveTicket()}>RESERVAR INGRESSO</Button>
+      <Button onClick={() => reserveTicket()} disabled={loading}>RESERVAR INGRESSO</Button>
     </Wrapper>
   );
 }
