@@ -3,6 +3,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import UserContext from './UserContext';
 import useSaveReservation from '../hooks/api/useSaveReservation';
 import { toast } from 'react-toastify';
+import useGetReservation from '../hooks/api/useGetReservation.js';
 
 export const PaymentContext = createContext();
 
@@ -13,10 +14,20 @@ export function PaymentProvider({ children }) {
   const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
   const [reservationData, setReservationData] = useLocalStorage('reservationData', null);
   const { saveReservationLoading, saveReservation } = useSaveReservation();
+  const { getReservation } = useGetReservation();
 
   useEffect(() => {
-    
+    getReservationData();
   }, []);
+
+  async function getReservationData() {
+    try {
+      const response = await getReservation(userData.user.id);
+      setReservationData(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   function selectModality(modality) {
     if(modality.type !== 'presential' && modality.type !== 'online') return;
