@@ -21,7 +21,7 @@ export function PaymentProvider({ children }) {
   // stored values 
   const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
   const [reservationData, setReservationData] = useLocalStorage('reservationData', null);
-  const [paymentConfirm, setPaymentConfirm] = useLocalStorage(false);
+  const [paymentConfirm, setPaymentConfirm] = useLocalStorage('paymentConfirm', false);
   // api hooks
   const { saveReservationLoading, saveReservation } = useSaveReservation();
   const { getReservation } = useGetReservation();
