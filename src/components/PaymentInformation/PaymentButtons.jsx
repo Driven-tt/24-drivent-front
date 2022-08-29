@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import { PaymentContext } from '../../contexts/PaymentContext';
 
 export default function PaymentButton() {
-  const { setPaymentData, processPayment } = useContext(PaymentContext);
+  const { processPayment } = useContext(PaymentContext);
   return (
     <Wrapper>
       <Button onClick={() => processPayment()}>FINALIZAR PAGAMENTO </Button>
-      <Button onClick={() => setPaymentData(null)}>VOLTAR </Button>
     </Wrapper>
   );
 }
