@@ -12,9 +12,16 @@ export function PaymentProvider({ children }) {
   // states
   const [ticketModality, setTicketModality] = useState({ type: null, price: null });
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
+  const [cardInfos, setCardInfos] = useState({
+    cardNumber: null,
+    cardName: null,
+    cardExpiration: null,
+    cardCv: null,
+  });
   // stored values 
   const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
   const [reservationData, setReservationData] = useLocalStorage('reservationData', null);
+  const [paymentConfirm, setPaymentConfirm] = useLocalStorage(false);
   // api hooks
   const { saveReservationLoading, saveReservation } = useSaveReservation();
   const { getReservation } = useGetReservation();
@@ -35,13 +42,13 @@ export function PaymentProvider({ children }) {
   }
 
   function selectModality(modality) {
-    if(modality.type !== 'presential' && modality.type !== 'online') return;
-    if(modality.type === 'online') setAccommodationModality({ type: null, price: null });
+    if (modality.type !== 'presential' && modality.type !== 'online') return;
+    if (modality.type === 'online') setAccommodationModality({ type: null, price: null });
     setTicketModality(modality);
   }
 
   function selectAccommodationModality(modality) {
-    if(modality.type !== 'withHotel' && modality.type !== 'withoutHotel') return;
+    if (modality.type !== 'withHotel' && modality.type !== 'withoutHotel') return;
     setAccommodationModality(modality);
   }
 
@@ -63,19 +70,31 @@ export function PaymentProvider({ children }) {
     }
   }
 
+  function processPayment() {
+    //TODO: chamar api para salvar dados do pagamento
+    //const newCardPayment = { ...cardInfos };
+    alert('PAGAMENTO CONFIRMADO !');
+    setPaymentConfirm(true);
+  }
+
   return (
-    <PaymentContext.Provider 
-      value={{ 
-        paymentData, 
-        setPaymentData, 
-        ticketModality, 
+    <PaymentContext.Provider
+      value={{
+        paymentData,
+        setPaymentData,
+        ticketModality,
         accommodationModality,
         loading: saveReservationLoading,
         reservationData,
-        selectModality, 
+        paymentConfirm,
+        cardInfos,
+        setCardInfos,
+        selectModality,
         selectAccommodationModality,
-        reserveTicket
-      }}>
+        reserveTicket,
+        processPayment,
+      }}
+    >
       {children}
     </PaymentContext.Provider>
   );

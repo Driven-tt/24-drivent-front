@@ -1,10 +1,30 @@
 import { Typography } from '@material-ui/core';
+import { useContext } from 'react';
 import styled from 'styled-components';
+import { PaymentContext } from '../../contexts/PaymentContext';
+import CreditCardForms from './CraditCardForm';
+import PaymentButton from './PaymentButtons';
+import PaymentConfirmation from './PaymentConfirmation';
 
 export default function FinishPayment({ reservation }) {
+  const { paymentConfirm } = useContext(PaymentContext);
+
   const modality = reservation === 'online' ? 'Online' : 'Presencial';
   const accommodation = reservation.withAccommodation ? '+ Com Hotel' : null;
   const total = Number(reservation.modalityPrice) + Number(reservation.accommodationPrice);
+
+  if(paymentConfirm) {
+    return (
+      <>
+        <Title variant='h5'>Ingresso escolhido</Title>
+        <TicketInfo>
+          <span>{modality} {accommodation}</span>
+          <span>R$ {total}</span>
+        </TicketInfo>
+        <PaymentConfirmation />
+      </>
+    );
+  }
 
   return (
     <>
@@ -13,6 +33,8 @@ export default function FinishPayment({ reservation }) {
         <span>{modality} {accommodation}</span>
         <span>R$ {total}</span>
       </TicketInfo>
+      <CreditCardForms />
+      <PaymentButton />
     </>
   );
 }

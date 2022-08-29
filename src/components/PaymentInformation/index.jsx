@@ -21,5 +21,5 @@ export default function PaymentInformation() {
 }
 
 const Title = styled(Typography)`
-  margin-bottom: 20px!important;
+  margin-bottom: 20px !important;
 `;
