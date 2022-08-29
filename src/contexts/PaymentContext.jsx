@@ -33,9 +33,8 @@ export function PaymentProvider({ children }) {
   async function getReservationData() {
     try {
       const response = await getReservation(userData.user.id);
-      if(!response.reservation) return;
 
-      setReservationData(response.reservation);
+      setReservationData(response.reservation || null);
     } catch (err) {
       console.log(err);
     }
