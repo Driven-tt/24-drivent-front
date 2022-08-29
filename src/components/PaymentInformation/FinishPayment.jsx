@@ -13,18 +13,7 @@ export default function FinishPayment({ reservation }) {
   const accommodation = reservation.withAccommodation ? '+ Com Hotel' : null;
   const total = Number(reservation.modalityPrice) + Number(reservation.accommodationPrice);
 
-  if(paymentConfirm) {
-    return (
-      <>
-        <Title variant='h5'>Ingresso escolhido</Title>
-        <TicketInfo>
-          <span>{modality} {accommodation}</span>
-          <span>R$ {total}</span>
-        </TicketInfo>
-        <PaymentConfirmation />
-      </>
-    );
-  }
+  const content = paymentConfirm ? <PaymentConfirmation /> : <><CreditCardForms /><PaymentButton /></>;
 
   return (
     <>
@@ -33,8 +22,7 @@ export default function FinishPayment({ reservation }) {
         <span>{modality} {accommodation}</span>
         <span>R$ {total}</span>
       </TicketInfo>
-      <CreditCardForms />
-      <PaymentButton />
+      {content}
     </>
   );
 }

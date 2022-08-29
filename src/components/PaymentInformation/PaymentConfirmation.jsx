@@ -3,7 +3,7 @@ import { Typography } from '@material-ui/core';
 import { AiFillCheckCircle } from 'react-icons/ai';
 export default function PaymentConfirmation() {
   return (
-    <>
+    <Box>
       <Subtitle variant="h5">Pagamento</Subtitle>
       <PaymentConfirmed>
         <CheckBox />
@@ -12,12 +12,20 @@ export default function PaymentConfirmation() {
           <p>Prossiga para escolha de hospedagem e atividades</p>
         </Text>
       </PaymentConfirmed>
-    </>
+    </Box>
   );
 }
 
+const Box = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  row-gap: 5px;
+  font-family: 'Roboto', sans-serif;
+  margin: 10px 0;
+`;
+
 const PaymentConfirmed = styled.div`
-  margin-top: 20px;
   display: flex;
   align-items: center;
 `;
@@ -25,7 +33,6 @@ const PaymentConfirmed = styled.div`
 const Subtitle = styled(Typography)`
   color: #8e8e8e;
   font-size: 20px !important;
-  font-family: 'Roboto', sans-serif;
 `;
 
 const Text = styled.div`
