@@ -5,7 +5,7 @@ on:
 
 name: Build and Deploy
 env:
-  REACT_APP_API_BASE_URL: /api
+  REACT_APP_API_BASE_URL: http://ec2-44-207-0-47.compute-1.amazonaws.com/api
 jobs:
   build:
     runs-on: drivent
