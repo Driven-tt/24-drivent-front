@@ -57,7 +57,7 @@ export function PaymentProvider({ children }) {
       modality: ticketModality.type,
       modalityPrice: Number(ticketModality.price),
       withAccommodation: accommodationModality.type === 'withHotel',
-      accommodationPrice: Number(accommodationModality.price) || 0
+      accommodationPrice: Number(accommodationModality.price) || 0,
     };
 
     try {
@@ -83,15 +83,15 @@ export function PaymentProvider({ children }) {
         setPaymentData,
         ticketModality,
         accommodationModality,
+        cardInfos,
         loading: saveReservationLoading,
         reservationData,
         paymentConfirm,
-        cardInfos,
-        setCardInfos,
         selectModality,
         selectAccommodationModality,
         reserveTicket,
         processPayment,
+        setCardInfos,
       }}
     >
       {children}
