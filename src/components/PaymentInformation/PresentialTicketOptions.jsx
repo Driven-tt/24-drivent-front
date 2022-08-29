@@ -13,8 +13,8 @@ export default function PresentialTicketOptions() {
     <Options>
       <Subtitle variant="h5">Otimo! Agora escolha sua modalidade de hospedagem</Subtitle>
       <div>
-        <PresentialTicketOption id="withHotel" title="Sem Hotel" price="0"/>
-        <PresentialTicketOption id="withoutHotel" title="Com Hotel" price="350"/>
+        <PresentialTicketOption id="withoutHotel" title="Sem Hotel" price="0"/>
+        <PresentialTicketOption id="withHotel" title="Com Hotel" price="350"/>
       </div>
     </Options>
   );

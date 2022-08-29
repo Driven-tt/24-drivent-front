@@ -1,14 +1,38 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import UserContext from './UserContext';
+import useSaveReservation from '../hooks/api/useSaveReservation';
+import { toast } from 'react-toastify';
+import useGetReservation from '../hooks/api/useGetReservation.js';
 
 export const PaymentContext = createContext();
 
 export function PaymentProvider({ children }) {
   const { userData } = useContext(UserContext);
+  // states
   const [ticketModality, setTicketModality] = useState({ type: null, price: null });
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
+  // stored values 
   const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
+  const [reservationData, setReservationData] = useLocalStorage('reservationData', null);
+  // api hooks
+  const { saveReservationLoading, saveReservation } = useSaveReservation();
+  const { getReservation } = useGetReservation();
+
+  useEffect(() => {
+    getReservationData();
+  }, []);
+
+  async function getReservationData() {
+    try {
+      const response = await getReservation(userData.user.id);
+      if(!response.reservation) return;
+
+      setReservationData(response.reservation);
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   function selectModality(modality) {
     if(modality.type !== 'presential' && modality.type !== 'online') return;
@@ -21,17 +45,22 @@ export function PaymentProvider({ children }) {
     setAccommodationModality(modality);
   }
 
-  function reserveTicket() {
-    //TODO chamar api e salvar os dados da reserva
+  async function reserveTicket() {
     const newReserve = {
-      userId: userData.user.id,
+      userId: Number(userData.user.id),
       modality: ticketModality.type,
-      modalityPrice: ticketModality.price,
-      withAccommodation: accommodationModality.type !== null,
-      accommodationModality: accommodationModality.price || 0
+      modalityPrice: Number(ticketModality.price),
+      withAccommodation: accommodationModality.type === 'withHotel',
+      accommodationPrice: Number(accommodationModality.price) || 0
     };
 
-    alert('INGRESSO RESERVADO !');
+    try {
+      await saveReservation(newReserve);
+      setReservationData(newReserve);
+      toast('Reserva feita com sucesso !');
+    } catch (err) {
+      toast('Não foi possível reservar o ingresso !');
+    }
   }
 
   return (
@@ -40,7 +69,9 @@ export function PaymentProvider({ children }) {
         paymentData, 
         setPaymentData, 
         ticketModality, 
-        accommodationModality, 
+        accommodationModality,
+        loading: saveReservationLoading,
+        reservationData,
         selectModality, 
         selectAccommodationModality,
         reserveTicket
