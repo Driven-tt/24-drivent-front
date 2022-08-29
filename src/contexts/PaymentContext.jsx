@@ -8,16 +8,16 @@ export function PaymentProvider({ children }) {
   const { userData } = useContext(UserContext);
   const [ticketModality, setTicketModality] = useState({ type: null, price: null });
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
-  const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
+  const [paymentData, setPaymentData] = useLocalStorage(null);
 
   function selectModality(modality) {
-    if(modality.type !== 'presential' && modality.type !== 'online') return;
-    if(modality.type === 'online') setAccommodationModality({ type: null, price: null });
+    if (modality.type !== 'presential' && modality.type !== 'online') return;
+    if (modality.type === 'online') setAccommodationModality({ type: null, price: null });
     setTicketModality(modality);
   }
 
   function selectAccommodationModality(modality) {
-    if(modality.type !== 'withHotel' && modality.type !== 'withoutHotel') return;
+    if (modality.type !== 'withHotel' && modality.type !== 'withoutHotel') return;
     setAccommodationModality(modality);
   }
 
@@ -28,23 +28,25 @@ export function PaymentProvider({ children }) {
       modality: ticketModality.type,
       modalityPrice: ticketModality.price,
       withAccommodation: accommodationModality.type !== null,
-      accommodationModality: accommodationModality.price || 0
+      accommodationModality: accommodationModality.price || 0,
     };
 
     alert('INGRESSO RESERVADO !');
+    setPaymentData(newReserve);
   }
 
   return (
-    <PaymentContext.Provider 
-      value={{ 
-        paymentData, 
-        setPaymentData, 
-        ticketModality, 
-        accommodationModality, 
-        selectModality, 
+    <PaymentContext.Provider
+      value={{
+        paymentData,
+        setPaymentData,
+        ticketModality,
+        accommodationModality,
+        selectModality,
         selectAccommodationModality,
-        reserveTicket
-      }}>
+        reserveTicket,
+      }}
+    >
       {children}
     </PaymentContext.Provider>
   );
