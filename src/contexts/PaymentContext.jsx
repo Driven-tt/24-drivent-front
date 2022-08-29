@@ -9,10 +9,13 @@ export const PaymentContext = createContext();
 
 export function PaymentProvider({ children }) {
   const { userData } = useContext(UserContext);
+  // states
   const [ticketModality, setTicketModality] = useState({ type: null, price: null });
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
+  // stored values 
   const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
   const [reservationData, setReservationData] = useLocalStorage('reservationData', null);
+  // api hooks
   const { saveReservationLoading, saveReservation } = useSaveReservation();
   const { getReservation } = useGetReservation();
 
@@ -23,7 +26,9 @@ export function PaymentProvider({ children }) {
   async function getReservationData() {
     try {
       const response = await getReservation(userData.user.id);
-      setReservationData(response.data);
+      if(!response.reservation) return;
+
+      setReservationData(response.reservation);
     } catch (err) {
       console.log(err);
     }
@@ -66,6 +71,7 @@ export function PaymentProvider({ children }) {
         ticketModality, 
         accommodationModality,
         loading: saveReservationLoading,
+        reservationData,
         selectModality, 
         selectAccommodationModality,
         reserveTicket
