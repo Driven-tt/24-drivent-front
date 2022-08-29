@@ -8,11 +8,12 @@ import ReserveTicketButton from './ReserveTicketButton';
 import TicketInfo from './TicketInfo';
 import CreditCardForms from './CraditCardForm';
 import PaymentButton from './PaymentButtons';
+import PaymentConfirmation from './PaymentConfirmation';
 import { PaymentContext } from '../../contexts/PaymentContext';
 import { useContext } from 'react';
 
 export default function PaymentInformation() {
-  const { paymentData } = useContext(PaymentContext);
+  const { paymentData, paymentConfirm } = useContext(PaymentContext);
   if (!paymentData) {
     return (
       <>
@@ -24,15 +25,26 @@ export default function PaymentInformation() {
       </>
     );
   } else {
-    return (
-      <>
-        <Title variant="h4">Ingresso e Pagamento</Title>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}></MuiPickersUtilsProvider>
-        <TicketInfo />
-        <CreditCardForms />
-        <PaymentButton />
-      </>
-    );
+    if (!paymentConfirm) {
+      return (
+        <>
+          <Title variant="h4">Ingresso e Pagamento</Title>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}></MuiPickersUtilsProvider>
+          <TicketInfo />
+          <CreditCardForms />
+          <PaymentButton />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Title variant="h4">Ingresso e Pagamento</Title>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}></MuiPickersUtilsProvider>
+          <TicketInfo />
+          <PaymentConfirmation />
+        </>
+      );
+    }
   }
 }
 

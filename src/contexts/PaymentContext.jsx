@@ -9,6 +9,13 @@ export function PaymentProvider({ children }) {
   const [ticketModality, setTicketModality] = useState({ type: null, price: null });
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
   const [paymentData, setPaymentData] = useLocalStorage(null);
+  const [cardInfos, setCardInfos] = useState({
+    cardNumber: null,
+    cardName: null,
+    cardExpiration: null,
+    cardCv: null,
+  });
+  const [paymentConfirm, setPaymentConfirm] = useLocalStorage(false);
 
   function selectModality(modality) {
     if (modality.type !== 'presential' && modality.type !== 'online') return;
@@ -35,6 +42,13 @@ export function PaymentProvider({ children }) {
     setPaymentData(newReserve);
   }
 
+  function processPayment() {
+    //TODO: chamar api para salvar dados do pagamento
+    //const newCardPayment = { ...cardInfos };
+    alert('PAGAMENTO CONFIRMADO !');
+    setPaymentConfirm(true);
+  }
+
   return (
     <PaymentContext.Provider
       value={{
@@ -42,9 +56,13 @@ export function PaymentProvider({ children }) {
         setPaymentData,
         ticketModality,
         accommodationModality,
+        paymentConfirm,
+        cardInfos,
+        setCardInfos,
         selectModality,
         selectAccommodationModality,
         reserveTicket,
+        processPayment,
       }}
     >
       {children}
