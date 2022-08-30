@@ -28,15 +28,15 @@ export function PaymentProvider({ children }) {
 
   useEffect(() => {
     getReservationData();
-  }, []);
+  }, [userData]);
 
   async function getReservationData() {
     try {
       const response = await getReservation(userData.user.id);
 
-      setReservationData(response.reservation || null);
+      setReservationData(response.reservation);
     } catch (err) {
-      console.log(err);
+      setReservationData(null);
     }
   }
 
