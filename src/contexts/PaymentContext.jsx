@@ -1,10 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
 import UserContext from './UserContext';
+import useReservation from '../hooks/api/useReservation';
 import useSaveReservation from '../hooks/api/useSaveReservation';
 import useSavePayment from '../hooks/api/useSavePayment';
 import { toast } from 'react-toastify';
-import useGetReservation from '../hooks/api/useGetReservation';
 
 export const PaymentContext = createContext();
 
@@ -20,16 +19,16 @@ export function PaymentProvider({ children }) {
     cardCv: null,
   });
   // stored values 
-  const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
-  const [reservationData, setReservationData] = useLocalStorage('reservationData', null);
-  const [paymentConfirm, setPaymentConfirm] = useLocalStorage('paymentConfirm', false);
+  const [paymentData, setPaymentData] = useState(null);
+  const [reservationData, setReservationData] = useState(null);
   // api hooks
+  const { getReservation } = useReservation();
   const { saveReservationLoading, saveReservation } = useSaveReservation();
-  const { savePayment } = useSavePayment();
-  const { getReservation } = useGetReservation();
+  const { savePaymentLoading, savePayment } = useSavePayment();
 
   useEffect(() => {
     getReservationData();
+    // getPaymentData();
   }, [userData]);
 
   async function getReservationData() {
@@ -81,7 +80,6 @@ export function PaymentProvider({ children }) {
     try {
       await savePayment(newPayment);
       setPaymentData(newPayment);
-      setPaymentConfirm(true);
       toast('Pagamento concluido !');
     } catch (err) {
       toast('Não foi possivel concluir o pagamento !');
@@ -96,9 +94,8 @@ export function PaymentProvider({ children }) {
         ticketModality,
         accommodationModality,
         cardInfos,
-        loading: saveReservationLoading,
+        loading: saveReservationLoading || savePaymentLoading,
         reservationData,
-        paymentConfirm,
         selectModality,
         selectAccommodationModality,
         reserveTicket,
