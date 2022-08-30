@@ -9,7 +9,7 @@ import PaymentConfirmation from './PaymentConfirmation';
 export default function FinishPayment({ reservation }) {
   const { paymentConfirm } = useContext(PaymentContext);
 
-  const modality = reservation === 'online' ? 'Online' : 'Presencial';
+  const modality = reservation.modality === 'online' ? 'Online' : 'Presencial';
   const accommodation = reservation.withAccommodation ? '+ Com Hotel' : null;
   const total = Number(reservation.modalityPrice) + Number(reservation.accommodationPrice);
 
