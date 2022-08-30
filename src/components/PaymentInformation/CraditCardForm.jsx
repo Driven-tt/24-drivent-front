@@ -27,7 +27,7 @@ export default function CreditCardForms() {
   }
   function nameChange(e) {
     setName(e);
-    setCardInfos({ ...cardInfos, cardName: e });
+    setCardInfos({ ...cardInfos, cardHolderName: e });
   }
   function expiryChange(e) {
     setExpiry(e);

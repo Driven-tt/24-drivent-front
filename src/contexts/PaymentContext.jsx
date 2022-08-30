@@ -2,8 +2,9 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import UserContext from './UserContext';
 import useSaveReservation from '../hooks/api/useSaveReservation';
+import useSavePayment from '../hooks/api/useSavePayment';
 import { toast } from 'react-toastify';
-import useGetReservation from '../hooks/api/useGetReservation.js';
+import useGetReservation from '../hooks/api/useGetReservation';
 
 export const PaymentContext = createContext();
 
@@ -14,7 +15,7 @@ export function PaymentProvider({ children }) {
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
   const [cardInfos, setCardInfos] = useState({
     cardNumber: null,
-    cardName: null,
+    cardHolderName: null,
     cardExpiration: null,
     cardCv: null,
   });
@@ -24,6 +25,7 @@ export function PaymentProvider({ children }) {
   const [paymentConfirm, setPaymentConfirm] = useLocalStorage('paymentConfirm', false);
   // api hooks
   const { saveReservationLoading, saveReservation } = useSaveReservation();
+  const { savePayment } = useSavePayment();
   const { getReservation } = useGetReservation();
 
   useEffect(() => {
@@ -33,7 +35,6 @@ export function PaymentProvider({ children }) {
   async function getReservationData() {
     try {
       const response = await getReservation(userData.user.id);
-
       setReservationData(response.reservation);
     } catch (err) {
       setReservationData(null);
@@ -69,11 +70,22 @@ export function PaymentProvider({ children }) {
     }
   }
 
-  function processPayment() {
-    //TODO: chamar api para salvar dados do pagamento
-    //const newCardPayment = { ...cardInfos };
-    alert('PAGAMENTO CONFIRMADO !');
-    setPaymentConfirm(true);
+  async function processPayment() {
+    const newPayment = {
+      userId: Number(userData.user.id),
+      total: Number(reservationData.modalityPrice) + Number(reservationData.accommodationPrice),
+      ...cardInfos
+    };
+    delete newPayment.cardCv;
+
+    try {
+      await savePayment(newPayment);
+      setPaymentData(newPayment);
+      setPaymentConfirm(true);
+      toast('Pagamento concluido !');
+    } catch (err) {
+      toast('Não foi possivel concluir o pagamento !');
+    }
   }
 
   return (
