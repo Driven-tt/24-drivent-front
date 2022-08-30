@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import UserContext from './UserContext';
 import useReservation from '../hooks/api/useReservation';
+import usePayment from '../hooks/api/usePayment';
 import useSaveReservation from '../hooks/api/useSaveReservation';
 import useSavePayment from '../hooks/api/useSavePayment';
 import { toast } from 'react-toastify';
@@ -23,20 +24,31 @@ export function PaymentProvider({ children }) {
   const [reservationData, setReservationData] = useState(null);
   // api hooks
   const { getReservation } = useReservation();
+  const { getPayment } = usePayment();
   const { saveReservationLoading, saveReservation } = useSaveReservation();
   const { savePaymentLoading, savePayment } = useSavePayment();
 
   useEffect(() => {
-    getReservationData();
-    // getPaymentData();
+    getData();
   }, [userData]);
 
-  async function getReservationData() {
+  async function getData() {
     try {
-      const response = await getReservation(userData.user.id);
-      setReservationData(response.reservation);
+      const response = await Promise.all(
+        [
+          getReservation(userData.user.id), 
+          getPayment(userData.user.id)
+        ]);
+      const [reservationResponse, paymentResponse] = response;
+
+      setPaymentData(paymentResponse.payment);
+      setReservationData(reservationResponse.reservation);
     } catch (err) {
-      setReservationData(null);
+      if(err.response.status !== 404) {
+        setReservationData(null);
+        setPaymentData(null);
+        toast('Erro enquanto buscava os dados do servidor !');
+      }
     }
   }
 
