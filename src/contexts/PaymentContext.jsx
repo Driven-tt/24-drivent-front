@@ -27,26 +27,19 @@ export function PaymentProvider({ children }) {
   const { getPayment } = usePayment();
   const { saveReservationLoading, saveReservation } = useSaveReservation();
   const { savePaymentLoading, savePayment } = useSavePayment();
-
+  
   useEffect(() => {
     getData();
   }, [userData]);
 
   async function getData() {
     try {
-      const response = await Promise.all(
-        [
-          getReservation(userData.user.id), 
-          getPayment(userData.user.id)
-        ]);
-      const [reservationResponse, paymentResponse] = response;
-
-      setPaymentData(paymentResponse.payment);
+      const reservationResponse = await getReservation(userData.user.id);
       setReservationData(reservationResponse.reservation);
+      const paymentResponse = await getPayment(userData.user.id);
+      setPaymentData(paymentResponse.payment);
     } catch (err) {
       if(err.response.status !== 404) {
-        setReservationData(null);
-        setPaymentData(null);
         toast('Erro enquanto buscava os dados do servidor !');
       }
     }
