@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import useLocalStorage from '../hooks/useLocalStorage';
 import UserContext from './UserContext';
+import useReservation from '../hooks/api/useReservation';
+import usePayment from '../hooks/api/usePayment';
 import useSaveReservation from '../hooks/api/useSaveReservation';
+import useSavePayment from '../hooks/api/useSavePayment';
 import { toast } from 'react-toastify';
-import useGetReservation from '../hooks/api/useGetReservation.js';
 
 export const PaymentContext = createContext();
 
@@ -14,29 +15,33 @@ export function PaymentProvider({ children }) {
   const [accommodationModality, setAccommodationModality] = useState({ type: null, price: null });
   const [cardInfos, setCardInfos] = useState({
     cardNumber: null,
-    cardName: null,
+    cardHolderName: null,
     cardExpiration: null,
     cardCv: null,
   });
   // stored values 
-  const [paymentData, setPaymentData] = useLocalStorage('paymentData', null);
-  const [reservationData, setReservationData] = useLocalStorage('reservationData', null);
-  const [paymentConfirm, setPaymentConfirm] = useLocalStorage('paymentConfirm', false);
+  const [paymentData, setPaymentData] = useState(null);
+  const [reservationData, setReservationData] = useState(null);
   // api hooks
+  const { getReservation } = useReservation();
+  const { getPayment } = usePayment();
   const { saveReservationLoading, saveReservation } = useSaveReservation();
-  const { getReservation } = useGetReservation();
-
+  const { savePaymentLoading, savePayment } = useSavePayment();
+  
   useEffect(() => {
-    getReservationData();
+    getData();
   }, [userData]);
 
-  async function getReservationData() {
+  async function getData() {
     try {
-      const response = await getReservation(userData.user.id);
-
-      setReservationData(response.reservation);
+      const reservationResponse = await getReservation(userData.user.id);
+      setReservationData(reservationResponse.reservation);
+      const paymentResponse = await getPayment(userData.user.id);
+      setPaymentData(paymentResponse.payment);
     } catch (err) {
-      setReservationData(null);
+      if(err.response.status !== 404) {
+        toast('Erro enquanto buscava os dados do servidor !');
+      }
     }
   }
 
@@ -69,11 +74,21 @@ export function PaymentProvider({ children }) {
     }
   }
 
-  function processPayment() {
-    //TODO: chamar api para salvar dados do pagamento
-    //const newCardPayment = { ...cardInfos };
-    alert('PAGAMENTO CONFIRMADO !');
-    setPaymentConfirm(true);
+  async function processPayment() {
+    const newPayment = {
+      userId: Number(userData.user.id),
+      total: Number(reservationData.modalityPrice) + Number(reservationData.accommodationPrice),
+      ...cardInfos
+    };
+    delete newPayment.cardCv;
+
+    try {
+      await savePayment(newPayment);
+      setPaymentData(newPayment);
+      toast('Pagamento concluido !');
+    } catch (err) {
+      toast('Não foi possivel concluir o pagamento !');
+    }
   }
 
   return (
@@ -84,9 +99,8 @@ export function PaymentProvider({ children }) {
         ticketModality,
         accommodationModality,
         cardInfos,
-        loading: saveReservationLoading,
+        loading: saveReservationLoading || savePaymentLoading,
         reservationData,
-        paymentConfirm,
         selectModality,
         selectAccommodationModality,
         reserveTicket,

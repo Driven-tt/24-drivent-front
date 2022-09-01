@@ -3,18 +3,18 @@ import useToken from '../useToken';
 
 import * as reservationApi from '../../services/reservationApi';
 
-export default function useGetReservation() {
+export default function useReservation() {
   const token = useToken();
 
   const {
-    loading: getReservationLoading,
-    error: getReservationError,
+    loading: reservationLoading,
+    error: reservationError,
     act: getReservation
   } = useAsync((data) => reservationApi.get(data, token), false);
 
   return {
-    getReservationLoading,
-    getReservationError,
+    reservationLoading,
+    reservationError,
     getReservation
   };
 }
