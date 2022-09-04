@@ -10,14 +10,14 @@ export default function usePayment() {
   const { userData } = useContext(UserContext);
 
   const {
-    data: payment,
+    data: paymentData,
     loading: paymentLoading,
     error: paymentError,
     act: getPayment
   } = useAsync(() => paymentApi.get(userData.user.id, token));
 
   return {
-    payment,
+    paymentData,
     paymentLoading,
     paymentError,
     getPayment
