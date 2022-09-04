@@ -19,7 +19,7 @@ export default function HotelInformation() {
   
   const content = 
     paymentData && reservationData?.reservation.withAccommodation ? 
-      <HotelSelection payment={paymentData?.payment} /> 
+      <HotelSelection /> 
       : 
       <UnauthorizedAccessMessage text={unauthorizedMessage}/>;
 
